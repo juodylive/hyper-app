@@ -55,7 +55,7 @@ dependencies:
   url_launcher: ^6.3.2
   order_tracker: ^0.0.2
   flutter_stripe: ^12.1.0
-  pay_with_paystack: ^1.0.14
+  pay_with_paystack: 1.0.14
   firebase_core: ^4.2.0
   firebase_messaging: ^16.0.3
   firebase_auth: ^6.1.1
@@ -112,3 +112,7 @@ flutter:
           - asset: assets/fonts/Lexend_Deca/static/LexendDeca-ExtraBold.ttf
             weight: 800
 
+
+# flutter_html 3.0.0 calls html's query_selector 'matches', removed in newer html releases.
+dependency_overrides:
+  html: 0.15.4
