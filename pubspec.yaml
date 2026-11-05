@@ -23,7 +23,7 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_styled_toast: ^2.2.1
   animated_hint_textfield: ^1.0.3
-  heroicons_flutter: ^0.4.0
+  heroicons_flutter: ^0.5.0
   dynamic_color: ^1.8.1
   google_maps_flutter: ^2.10.0
   geolocator: ^14.0.2
