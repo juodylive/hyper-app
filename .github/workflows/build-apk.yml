@@ -32,13 +32,45 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         run: |
-          echo "$KEYSTORE_B64" | base64 -d > android/app/dwaay.jks
+          set -e
+          # remove any spaces / newlines that came with the pasted secret
+          printf '%s' "$KEYSTORE_B64" | tr -d '[:space:]' | base64 -d > android/app/dwaay.jks
+          # write key.properties with Java-properties escaping (backslash first)
+          esc() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/#/\\#/g' -e 's/!/\\!/g' -e 's/=/\\=/g' -e 's/:/\\:/g'; }
           {
-            echo "storePassword=$STORE_PASSWORD"
-            echo "keyPassword=$KEY_PASSWORD"
-            echo "keyAlias=$KEY_ALIAS"
-            echo "storeFile=dwaay.jks"
+            printf 'storePassword=%s\n' "$(esc "$STORE_PASSWORD")"
+            printf 'keyPassword=%s\n'   "$(esc "$KEY_PASSWORD")"
+            printf 'keyAlias=%s\n'      "$KEY_ALIAS"
+            printf 'storeFile=dwaay.jks\n'
           } > android/key.properties
+
+      - name: Verify keystore (fails fast with a clear reason)
+        env:
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          echo "Keystore size (bytes): $(stat -c %s android/app/dwaay.jks)"
+          echo "Keystore sha256: $(sha256sum android/app/dwaay.jks | cut -d' ' -f1)"
+          if ! keytool -list -keystore android/app/dwaay.jks -storepass "$STORE_PASSWORD" > /tmp/list.txt 2>&1; then
+            echo "::error::Cannot open keystore: KEYSTORE_B64 is incomplete/corrupted OR STORE_PASSWORD is wrong"
+            cat /tmp/list.txt | sed 's/^/  /'
+            exit 1
+          fi
+          if ! keytool -list -keystore android/app/dwaay.jks -storepass "$STORE_PASSWORD" -alias "$KEY_ALIAS" > /dev/null 2>&1; then
+            echo "::error::Alias not found: KEY_ALIAS does not match the alias inside the keystore"
+            exit 1
+          fi
+          if ! keytool -importkeystore -srckeystore android/app/dwaay.jks -destkeystore /tmp/check.p12 \
+              -deststoretype PKCS12 -srcalias "$KEY_ALIAS" \
+              -srcstorepass "$STORE_PASSWORD" -srckeypass "$KEY_PASSWORD" \
+              -deststorepass "$STORE_PASSWORD" -destkeypass "$STORE_PASSWORD" -noprompt > /tmp/key.txt 2>&1; then
+            echo "::error::Key password is wrong: KEY_PASSWORD must match the key password"
+            cat /tmp/key.txt | sed 's/^/  /'
+            exit 1
+          fi
+          rm -f /tmp/check.p12
+          echo "Keystore OK"
 
       - name: Install dependencies
         run: flutter pub get
