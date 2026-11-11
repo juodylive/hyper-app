@@ -207,19 +207,18 @@ class _RegisterPageState extends State<RegisterPage> {
       'confirmPassword': _confirmPasswordController.text,
     };
 
-    // Store registration data
-    context.read<AuthBloc>().add(StoreRegistrationDataEvent(
-      registrationData: registrationData,
-      phoneNumber: _phoneNumber,
+    // Register directly with email + password. The phone number is only kept
+    // as a backup contact: no SMS verification code is sent.
+    context.read<AuthBloc>().add(RegisterRequest(
+      name: registrationData['name'].toString(),
+      email: registrationData['email'].toString(),
+      mobile: _phoneNumber,
+      password: registrationData['password'].toString(),
+      country: _countryName,
+      iso2: _countryIso2,
       countryCode: _countryCode,
-      isoCode: _countryIso2,
-    ));
-
-    // Send OTP
-    context.read<AuthBloc>().add(SendOtpToPhoneEvent(
-        number: _phoneNumber,
-        countryCode: _countryCode,
-        isoCode: _countryIso2
+      completePhoneNumber: _completePhoneNumber,
+      confirmPassword: registrationData['confirmPassword'].toString(),
     ));
   }
 
@@ -231,8 +230,13 @@ class _RegisterPageState extends State<RegisterPage> {
       showViewCart: false,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (BuildContext context, AuthState state) {
-          if (state is LoginPhoneCodeSentState) {
-            _handleRegister(state.verificationId ?? '');
+          if (state is AuthSuccess) {
+            ToastManager.show(
+                context: context,
+                message: state.message,
+                type: ToastType.success
+            );
+            GoRouter.of(context).pushReplacement(AppRoutes.splashScreen);
           }
           if (state is AuthFailed) {
             ToastManager.show(
