@@ -20,7 +20,7 @@ class AppConstant {
   static String appName = 'Dwaay';
   static String androidMapKey = 'AIzaSyBAXG_7EMwEw-vAenDUCUIl43XZHFDqz3c';
   static String iosMapKey = 'YOUR_IOS_MAP_KEY';
-  static String serverClientId = 'FIREBASE_SERVER_CLIENT_ID';
+  static String serverClientId = '1:1080091763885:android:e32ab29858f055679ad224';
 
   static String localUserLocationHiveBoxName = 'userLocationBox';
   static String localUserLocationHiveBoxKey = 'user_location';
