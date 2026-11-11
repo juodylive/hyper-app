@@ -7,6 +7,18 @@ allprojects {
 
 rootProject.buildDir = "../build"
 
+// Force every Flutter plugin (e.g. old fluttertoast, compiled against android-33)
+// to compile against a recent SDK. Must stay BEFORE the evaluationDependsOn block.
+subprojects {
+    afterEvaluate { project ->
+        if (project.name != 'app' && project.hasProperty('android')) {
+            project.android {
+                compileSdkVersion 36
+            }
+        }
+    }
+}
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
