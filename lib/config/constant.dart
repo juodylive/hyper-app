@@ -18,7 +18,7 @@ class AppConstant {
   static String domainBaseUrl = 'https://dwaay.juodylive.qzz.io';
   static String baseUrl= '$domainBaseUrl/api/';
   static String appName = 'Dwaay';
-  static String androidMapKey = 'YOUR_ANDROID_MAP_KEY';
+  static String androidMapKey = 'AIzaSyBAXG_7EMwEw-vAenDUCUIl43XZHFDqz3c';
   static String iosMapKey = 'YOUR_IOS_MAP_KEY';
   static String serverClientId = 'FIREBASE_SERVER_CLIENT_ID';
 
