@@ -15,7 +15,7 @@ import '../screens/cart_page/bloc/get_user_cart/get_user_cart_bloc.dart';
 import '../screens/my_orders/model/order_detail_model.dart';
 
 class AppConstant {
-  static String domainBaseUrl = 'YOUR_DOMAIN_BASE_URL';
+  static String domainBaseUrl = 'https://dwaay.juodylive.qzz.io';
   static String baseUrl= '$domainBaseUrl/api/';
   static String appName = 'Dwaay';
   static String androidMapKey = 'YOUR_ANDROID_MAP_KEY';
