@@ -12,7 +12,20 @@
           "package_name": "com.dwaay.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1080091763885-0f2a7ooicna0pqhu4dkurocncm3pu0nn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dwaay.app",
+            "certificate_hash": "82074f4b4973317a8f166871e6b36337490225e8"
+          }
+        },
+        {
+          "client_id": "1080091763885-pstvj3jt7hekq3fbc65fmid85ijf4285.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCQnF-RLvdDjNd5unfoyrANCVf2kKB0hew"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1080091763885-pstvj3jt7hekq3fbc65fmid85ijf4285.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
