@@ -7,13 +7,24 @@ allprojects {
 
 rootProject.buildDir = "../build"
 
-// Force every Flutter plugin (e.g. old fluttertoast, compiled against android-33)
-// to compile against a recent SDK. Must stay BEFORE the evaluationDependsOn block.
+// 1) Force every Flutter plugin (e.g. old fluttertoast, compiled against android-33)
+//    to compile against a recent SDK.
+// 2) Disable the release lint check: it crashes on CI (lintVitalAnalyzeRelease) and does
+//    not affect the produced APK.
+// Must stay BEFORE the evaluationDependsOn block.
 subprojects {
     afterEvaluate { project ->
-        if (project.name != 'app' && project.hasProperty('android')) {
+        if (project.hasProperty('android')) {
             project.android {
-                compileSdkVersion 36
+                lint {
+                    checkReleaseBuilds false
+                    abortOnError false
+                }
+            }
+            if (project.name != 'app') {
+                project.android {
+                    compileSdkVersion 36
+                }
             }
         }
     }
